@@ -2,6 +2,8 @@ doctype html
 html
    head
       title Add User
+      link(rel="stylesheet", type="text/css", href="../css/style.css")
+
    body
       form(action="/newUser", method="post")
          input(type="text", placeholder="First Name", name="firstName")
@@ -9,3 +11,4 @@ html
          input(type="text", placeholder="Email", name="email")
          input(type="number", placeholder="Age", name="age")
          input(type="submit")
+   a(href="/users") Back to User List (All)
