@@ -1,0 +1,11 @@
+doctype html
+html
+   head
+      title Add User
+   body
+      form(action="/newUser", method="post")
+         input(type="text", placeholder="First Name", name="firstName")
+         input(type="text", placeholder="Last Name", name="lastName")
+         input(type="text", placeholder="Email", name="email")
+         input(type="number", placeholder="Age", name="age")
+         input(type="submit")
