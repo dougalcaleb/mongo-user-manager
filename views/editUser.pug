@@ -3,9 +3,8 @@ html
    head
       title Edit User
       link(rel="stylesheet", type="text/css", href="../css/style.css")
-
    body
-      h1 Editing #{name}
+      h1 Editing #{firstName} #{lastName}
       form(action="/editExisting", method="post")
          input(type="text", placeholder="First Name", name="firstName", value=firstName)
          br

@@ -76,8 +76,14 @@ async function addNewUser(id = "NO_DATA", firstName = "NO_DATA", lastName = "NO_
 }
 
 app.get("/edit/:uid", (req, res) => {
-   editing = { id: req.params.uid, name: req.params.name, age: parseFloat(req.params.age), email: req.params.email };
-   res.render("editUser", editing);
+   db.find({ userId: req.params.uid }, (e, data) => {
+      res.render("editUser", data[0]);
+      // res.send(JSON.stringify(data));
+   });
+});
+
+app.post("/editExisting", (req, res) => {
+      // https://mongoosejs.com/docs/api/query.html#query_Query-findOneAndUpdate
 });
 
 

@@ -14,15 +14,15 @@ html
             td Email
          for user in users
             tr
-               td #{user.id}
+               td #{user.userId}
                td #{user.firstName}
                td #{user.lastName}
                td #{user.age}
                td #{user.email}
                td
-                  a(href="/edit/"+user.id+"/"+user.firstName+"/"+user.lastName+"/"+user.age+"/"+user.email) EDIT
+                  a(href="/edit/"+user.userId) EDIT
                td
-                  a(href="/delete/"+user.id) DELETE
+                  a(href="/delete/"+user.userId) DELETE
       br
       a(href="/addUser") Add user
       br
