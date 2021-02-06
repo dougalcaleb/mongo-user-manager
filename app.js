@@ -39,7 +39,6 @@ app.get("/users/:query*?", (req, res) => {
    }
    console.log(`Query is ${q}`);
    db.find(q, (err, data) => {
-      // console.log(data);
       if (err) throw err;
       activeData = data;
       res.render("users", { users: data, userCount: data.length || 0 });
@@ -68,9 +67,6 @@ app.post("/sort", urlencodedParser, (req, res) => {
 
 app.post("/newUser", urlencodedParser, (req, res) => {
    addNewUser(uuid(), req.body.firstName, req.body.lastName, req.body.email, req.body.age, res);
-   // db.find({}, (e, data) => {
-   //    res.render("users", {users: data, userCount: data.length || 0});
-   // });
 });
 
 async function addNewUser(id = "NO_DATA", firstName = "NO_DATA", lastName = "NO_DATA", email = "NO_DATA", age = 0, res = null) {
@@ -79,7 +75,6 @@ async function addNewUser(id = "NO_DATA", firstName = "NO_DATA", lastName = "NO_
          updateUsers(res);
       }
    });
-   // console.log("Write complete");
 }
 
 app.get("/edit/:uid", (req, res) => {
