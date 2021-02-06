@@ -15,6 +15,7 @@ mongoose.connect(dbLoc, { useNewUrlParser: true, useUnifiedTopology: true });
 const dbi = mongoose.connection;
 
 let activeData = [];
+let editing;
 
 app.set("views", "./views");
 app.set("view engine", "pug");
@@ -66,25 +67,67 @@ app.post("/sort", urlencodedParser, (req, res) => {
 });
 
 app.post("/newUser", urlencodedParser, (req, res) => {
-   addNewUser(uuid(), req.body.firstName,req.body.lastName,req.body.email,req.body.age);
-   res.render("users", {users: activeData, userCount: activeData.length || 0});
+   addNewUser(uuid(), req.body.firstName, req.body.lastName, req.body.email, req.body.age, res);
+   // db.find({}, (e, data) => {
+   //    res.render("users", {users: data, userCount: data.length || 0});
+   // });
 });
 
-async function addNewUser(id = "NO_DATA", firstName = "NO_DATA", lastName = "NO_DATA", email = "NO_DATA", age = 0) {
-   db.insertMany({ userId: id, firstName: firstName, lastName: lastName, email: email, age: age });
-   console.log("Write complete");
+async function addNewUser(id = "NO_DATA", firstName = "NO_DATA", lastName = "NO_DATA", email = "NO_DATA", age = 0, res = null) {
+   db.insertMany({ userId: id, firstName: firstName, lastName: lastName, email: email, age: age }, () => {
+      if (res) {
+         updateUsers(res);
+      }
+   });
+   // console.log("Write complete");
 }
 
 app.get("/edit/:uid", (req, res) => {
    db.find({ userId: req.params.uid }, (e, data) => {
+      editing = req.params.uid;
       res.render("editUser", data[0]);
-      // res.send(JSON.stringify(data));
    });
 });
 
-app.post("/editExisting", (req, res) => {
-      // https://mongoosejs.com/docs/api/query.html#query_Query-findOneAndUpdate
+app.post("/editExisting", urlencodedParser, (req, res) => {
+   let updatedUser = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      age: req.body.age
+   };
+   db.findOneAndUpdate({ userId: editing }, updatedUser, (e) => {
+      if (e) console.log(e);
+      updateUsers(res);
+   });
 });
+
+app.get("/delete/:uid", (req, res) => {
+   db.find({ userId: req.params.uid }, (e, data) => { })
+      .deleteOne({ userId: req.params.uid }, (e, result) => {
+      updateUsers(res);
+   });
+});
+
+app.post("/search", urlencodedParser, (req, res) => {
+   let filter = {};
+   if (req.body.firstName) {
+      filter["firstName"] = req.body.firstName;
+   }
+   if (req.body.lastName) {
+      filter["lastName"] = req.body.lastName;
+   }
+   console.log(filter);
+   db.find(filter, (e, data) => {
+      res.render("users", {users: data, userCount: data.length || 0});
+   });
+});
+
+async function updateUsers(res) {
+   db.find({}, (e, data) => {
+      res.render("users", {users: data, userCount: data.length || 0});
+   });
+}
 
 
 app.listen(PORT, () => {
